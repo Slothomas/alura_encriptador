@@ -1,87 +1,95 @@
-// Función para cifrar el texto
-function cifrar(diccionario) {
-    document.querySelector("#advertencia").removeAttribute("style");
-    var areaTexto = document.querySelector("#entrada_texto");
-    const texto = areaTexto.value;
-    var seccionDefault = document.querySelector("#default_mensaje");
-    var seccionResultado = document.querySelector("#resultado_mensaje");
-    var areaSalida = document.querySelector("#salida_texto");
-
+function encriptar(traduccion){
+    document.querySelector("#warning").removeAttribute("style");
+    var textarea = document.querySelector("#texto");
+    const texto = textarea.value;
+    var area_default = document.querySelector("#default");
+    var area_result = document.querySelector("#result");
+    var texto_out = document.querySelector("#texto_out");
     if (texto != ""){
-        var resultado = "";
-        for(var i = 0; i < texto.length; i++){
-            if (((texto[i] < 'a') || (texto[i] > 'z')) && (texto[i] != ' ')){
-                document.querySelector("#advertencia").style.color = "red";
-                document.querySelector("#advertencia").style.fontSize = "16px";
+        var out = ""
+        for(var i=0; i < texto.length; i++){
+            if(((texto[i] < 'a') || (texto[i] > 'z')) && (texto[i] != ' ')){
+                document.querySelector("#warning").style.color = "red";
+                document.querySelector("#warning").style.fontSize = "16px";
                 return;
             }
             else if((texto.length == 1 && texto == " ") || texto.replace(/ /g, "") == ""){
-                seccionDefault.classList.remove("invisible");
-                seccionResultado.classList.add("invisible");
+                area_default.classList.remove("invisible");
+                area_result.classList.add("invisible");
                 return;
             }
-
-            resultado += diccionario[texto[i]] || texto[i];
+            if(texto[i] == 'a'){
+                out += traduccion["a"] ;
+            }
+            else if(texto[i] == 'e'){
+                out += traduccion["e"];
+            }
+            else if(texto[i] == 'i'){
+                out += traduccion["i"]; 
+            }
+            else if(texto[i] == 'o'){
+                out += traduccion["o"]; 
+            }
+            else if(texto[i] == 'u'){
+                out += traduccion["u"]; 
+            }
+            else{
+                out += texto[i];
+            }
         }
 
-        seccionDefault.classList.add("invisible");
-        seccionResultado.classList.remove("invisible");
-        areaSalida.innerHTML = resultado;
+        area_default.classList.add("invisible");
+        area_result.classList.remove("invisible");
+        texto_out.innerHTML = out;
     }
 
     return;
+
 }
 
-// Función para descifrar el texto
-function descifrar(diccionario) {
-    document.querySelector("#advertencia").removeAttribute("style");
-    var areaTexto = document.querySelector("#entrada_texto");
-    var texto = areaTexto.value;
-    var seccionDefault = document.querySelector("#default_mensaje");
-    var seccionResultado = document.querySelector("#resultado_mensaje");
-    var areaSalida = document.querySelector("#salida_texto");
-
+function desencriptar(traduccion){
+    document.querySelector("#warning").removeAttribute("style");
+    var textarea = document.querySelector("#texto");
+    var texto = textarea.value;
+    var area_default = document.querySelector("#default");
+    var area_result = document.querySelector("#result");
+    var texto_out = document.querySelector("#texto_out");
     if (texto != ""){
-        for(var i = 0; i < texto.length; i++){
-            if (((texto[i] < 'a') || (texto[i] > 'z')) && (texto[i] != ' ')){
-                document.querySelector("#advertencia").style.color = "red";
-                document.querySelector("#advertencia").style.fontSize = "16px";
+        for(var i=0; i < texto.length; i++){
+            if(((texto[i] < 'a') || (texto[i] > 'z')) && (texto[i] != ' ')){
+                document.querySelector("#warning").style.color = "red";
+                document.querySelector("#warning").style.fontSize = "16px";
                 return;
             }
             else if((texto.length == 1 && texto == " ") || texto.replace(/ /g, "") == ""){
-                seccionDefault.classList.remove("invisible");
-                seccionResultado.classList.add("invisible");
+                area_default.classList.remove("invisible");
+                area_result.classList.add("invisible");
                 return;
             }
         }
-
-        seccionDefault.classList.add("invisible");
-        seccionResultado.classList.remove("invisible");
-
-        for (let clave in diccionario) {
-            texto = texto.replace(new RegExp(diccionario[clave], "g"), clave);
-        }
-        
-        areaSalida.innerHTML = texto;
+        area_default.classList.add("invisible");
+        area_result.classList.remove("invisible");
+        texto = texto.replace(new RegExp(traduccion["a"], "g"), "a");
+        texto = texto.replace(new RegExp(traduccion["e"], "g"), "e");
+        texto = texto.replace(new RegExp(traduccion["i"], "g"), "i");
+        texto = texto.replace(new RegExp(traduccion["o"], "g"), "o");
+        texto = texto.replace(new RegExp(traduccion["u"], "g"), "u");
+        texto_out.innerHTML = texto;
     }
-
     return;
 }
 
-// Función para copiar texto al portapapeles
-function copiarAlPortapapeles() {
-    const areaSalida = document.querySelector("#salida_texto");
-    navigator.clipboard.writeText(areaSalida.value);
+function clipboard(){
+    const texto_out = document.querySelector("#texto_out");
+    navigator.clipboard.writeText(texto_out.value);
 }
 
-// Asignación de eventos a los botones
-const botonCifrar = document.querySelector('#boton_encriptar');
-const botonDescifrar = document.querySelector('#boton_desencriptar');
-const botonCopiar = document.querySelector('#boton_copiar');
+const enc = document.querySelector('#enc');
+const des = document.querySelector('#des');
+const copy = document.querySelector('#copiar');
 
-// Diccionario de cifrado
-var diccionarioCifrado = {"a": "ai", "e": "enter", "i": "imes", "o": "ober", "u": "ufat"};
+var traduccion = {"a": "ai", "e": "enter", "i": "imes", "o": "ober", "u": "ufat"};
 
-botonCifrar.addEventListener('click', function() { cifrar(diccionarioCifrado); });
-botonDescifrar.addEventListener('click', function() { descifrar(diccionarioCifrado); });
-botonCopiar.addEventListener('click', function() { copiarAlPortapapeles(); });
+enc.addEventListener( 'click', function() {encriptar(traduccion);} );
+des.addEventListener( 'click', function() {desencriptar(traduccion);} );
+copy.addEventListener( 'click', function() {clipboard();} );
